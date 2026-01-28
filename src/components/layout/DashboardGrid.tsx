@@ -18,8 +18,11 @@ export const DashboardGrid: React.FC = () => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   // Grid configuration
-  const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
-  const cols = useMemo(() => ({ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }), []);
+  const breakpoints = { xl: 1500, lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
+  const cols = useMemo(
+    () => ({ xl: 16, lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }),
+    [],
+  );
 
   // Snap navigation widgets to edges
   const snapNavigationToEdge = useCallback(
@@ -84,7 +87,11 @@ export const DashboardGrid: React.FC = () => {
     if (
       globalThis.confirm("Are you sure you want to reset the dashboard layout?")
     ) {
+      // Clear localStorage cache to force fresh layout
+      localStorage.removeItem("admin-dashboard-layout");
       resetLayout();
+      // Reload page to ensure clean state
+      window.location.reload();
     }
   }, [resetLayout]);
 
@@ -177,7 +184,7 @@ export const DashboardGrid: React.FC = () => {
           // Apply snap logic for navigation widgets
           const currentBreakpoint =
             Object.keys(allLayouts).find((bp) => allLayouts[bp] === layout) ||
-            "lg";
+            "xl";
           console.log("Current breakpoint:", currentBreakpoint);
 
           const snappedLayout = snapNavigationToEdge(
@@ -191,12 +198,15 @@ export const DashboardGrid: React.FC = () => {
 
           onLayoutChange(snappedLayout, updatedLayouts);
         }}
-        onBreakpointChange={onBreakpointChange}
+        onBreakpointChange={(breakpoint, cols) => {
+          console.log("Breakpoint changed to:", breakpoint, "cols:", cols);
+          onBreakpointChange(breakpoint, cols);
+        }}
         breakpoints={breakpoints}
         cols={cols}
         rowHeight={80}
         margin={[16, 16]}
-        width={1200}
+        width={1500}
       >
         {widgets.map(renderWidget)}
       </Responsive>

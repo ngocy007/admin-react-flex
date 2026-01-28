@@ -158,6 +158,7 @@ export const useLayoutStore = create<LayoutState>()(
       resetLayout: () => {
         set({
           layouts: {
+            xl: [...defaultWidgets],
             lg: [...defaultWidgets],
             md: [...defaultWidgets],
             sm: [...defaultWidgets],
@@ -165,13 +166,13 @@ export const useLayoutStore = create<LayoutState>()(
             xxs: [...defaultWidgets],
           },
           widgets: [...defaultWidgets],
-          currentBreakpoint: "lg",
+          currentBreakpoint: "xl",
         });
       },
     }),
     {
       name: "admin-dashboard-layout",
-      version: 1,
+      version: 2, // Increased version to clear old cache
     },
   ),
 );
